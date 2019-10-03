@@ -22,16 +22,18 @@ class PostsSpider(scrapy.Spider):
     	# response.xpath('//*[@class="cg-dealFinder-result-model"]/span/text()').extract()
         posts = response.xpath('//*[@class="cg-dealFinder-result-model"]')
         i = 0
+        j = 0
 
         #45 bc there are 45 /spans
         while i < 45:
-        	# some funky code print post #
-        	#if i % 0 == 0 or i % 1 == 0:
-        	# TODO h4/span/text???
+        	# some funky code
         	info = response.xpath('.//*[@class="cg-dealFinder-result-model"]/span/text()').extract()[i]
         	if i % 3 == 0:
+        		price = response.xpath('//*[@class="cg-dealFinder-result-stats"]/p/span/text()').extract()[j]
+        		j += 1
         		print '\n-------------------------------------------------------------\n'
         		print 'Post #' + str(1 + (i/3)) # LOL
+        		print 'Price: $' + str(price)
         	print info
         	i += 1
 
@@ -42,4 +44,4 @@ class PostsSpider(scrapy.Spider):
      	# absolute_next_page_url = response.urljoin('#resultsPage=2')
 
      	# hard coding new url doesnt work
-     	#yield scrapy.Request('https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2')
+     	yield scrapy.Request('https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2')
