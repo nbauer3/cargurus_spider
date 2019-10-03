@@ -29,11 +29,18 @@ class PostsSpider(scrapy.Spider):
         	# some funky code
         	info = response.xpath('.//*[@class="cg-dealFinder-result-model"]/span/text()').extract()[i]
         	if i % 3 == 0:
+        		# used cars is at position 2/3 for all 15 posts
+        		# the deal over or under is on the car is 2/3
+        		# response.xpath('.//*[@class="cg-dealFinder-result-deal"]/div/text()').extract()
         		price = response.xpath('//*[@class="cg-dealFinder-result-stats"]/p/span/text()').extract()[j]
+        		mileage = response.xpath('.//*[@class="cg-dealFinder-result-stats"]/p[2]/span/text()').extract()[j]
         		j += 1
         		print '\n-------------------------------------------------------------\n'
         		print 'Post #' + str(1 + (i/3)) # LOL
         		print 'Price: $' + str(price)
+        		print 'Mileage: ' + str(mileage)
+        	#attempting to get rid of Used Cars	
+        	#if str(info) != 'Used Cars'
         	print info
         	i += 1
 
