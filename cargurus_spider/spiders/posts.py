@@ -11,7 +11,7 @@ class PostsSpider(scrapy.Spider):
     	title_0 = response.xpath('//h1/text()').extract()[0]
     	title_1 = response.xpath('//h1/em/text()').extract()[0]
     	title_2 = response.xpath('//h1/text()').extract()[1]
-    	#title_3 = response.xpath('//h1/em[2]/text()').extract()[0]
+    	title_3 = response.xpath('//h1/em[2]/text()').extract()[0]
 
     	# both fixes coming up with [] OR None result
     	# title_3 = response.xpath('.//*[@class="active"]/a/text()').extract()
