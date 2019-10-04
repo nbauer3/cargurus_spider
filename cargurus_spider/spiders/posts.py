@@ -4,8 +4,17 @@ import scrapy
 
 class PostsSpider(scrapy.Spider):
     name = 'posts'
-    allowed_domains = ['www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164']
-    start_urls = ['http://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164/']
+    allowed_domains = ['www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=1',
+	    'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2', 
+	]
+    start_urls = [
+	    'http://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=1',
+	    'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2', 
+	]
+    # ^^^probably a more efficient way of doing this but whatever
+    # Crawls each page
+
+    # TODO yield data to MySql or .json or .csv file
 
     def parse(self, response):
     	title_0 = response.xpath('//h1/text()').extract()[0]
@@ -13,10 +22,6 @@ class PostsSpider(scrapy.Spider):
     	title_2 = response.xpath('//h1/text()').extract()[1]
     	title_3 = response.xpath('//h1/em[2]/text()').extract()[0]
 
-    	# both fixes coming up with [] OR None result
-    	# title_3 = response.xpath('.//*[@class="active"]/a/text()').extract()
-    	# title_3 = response.xpath('//*[@id="breadcrumb"]/li[4]/a/text()').extract_first()
-    	# title location coming back as 'Nationwide'
     	title = title_0 + title_1 + title_2 + str(title_3)
 
     	print '\n\n#################### - STARTING SPIDER - ####################\n\n'
@@ -27,6 +32,13 @@ class PostsSpider(scrapy.Spider):
         posts = response.xpath('//*[@class="cg-dealFinder-result-model"]')
         i = 0
         j = 0
+
+        # yielding data for .json will be out of order bc its presented in a terrible fashion#str()?
+            #yield {
+            #    'Post Title': postTitle,
+            #    'Price': price,
+            #    'Mileage': mileage,
+            #}
 
         #45 bc there are 45 /spans
         while i < 45:
@@ -41,8 +53,12 @@ class PostsSpider(scrapy.Spider):
         		j += 1
         		print '\n-------------------------------------------------------------\n'
         		print 'Post #' + str(1 + (i/3)) # LOL
-        		print 'Price: $' + str(price)
+        		if i % 2 == 0:
+        			print 'Price: ' + str(price)
+        		else:
+        			print 'Price: $' + str(price)
         		print 'Mileage: ' + str(mileage)
+
         	#attempting to get rid of Used Cars	
         	#if str(info) != 'Used Cars'
         	print info
@@ -53,6 +69,5 @@ class PostsSpider(scrapy.Spider):
      	#absolute_next_page_url = response.urljoin(next_page_url)
      	# doest work bc adds '/' but also hardcoded the url into scrapy.Request
      	# absolute_next_page_url = response.urljoin('#resultsPage=2')
-
      	# hard coding new url doesnt work
-     	yield scrapy.Request('https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2')
+     	#yield scrapy.Request('https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2')
