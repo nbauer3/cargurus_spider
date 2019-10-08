@@ -6,11 +6,11 @@ class PostsSpider(scrapy.Spider):
     name = 'posts'
     #for i in range(10):
     allowed_domains = [
-	    'www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=1',
+	    'www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164',
 	    #'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2', 
 	]
     start_urls = [
-	    'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=5',
+    	'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=1',
 	    #'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=2', 
 	]
 
@@ -21,8 +21,8 @@ class PostsSpider(scrapy.Spider):
     def parse(self, response):
     	# TODO PAGE CHANGES WITH THIS SO MAYBE LOOPAND APPEND URL?
     	#
-    	url = 'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=5' #+ str(i)
-    	yield scrapy.Request(url=url, callback=self.parse)
+    	#url = 'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=5' #+ str(i)
+    	#yield scrapy.Request(url=url, callback=self.parse)
     	self.scrape(response)
 
     	# A @href element that refers to the 'next button'
@@ -62,7 +62,7 @@ class PostsSpider(scrapy.Spider):
         		# the deal over or under is on the car is 2/3
         		# great/good/bad deals with $ amount over/under market price
         		# response.xpath('.//*[@class="cg-dealFinder-result-deal"]/div/text()').extract()
-        		
+
         		price = response.xpath('//*[@class="cg-dealFinder-result-stats"]/p/span/text()').extract()[j]
         		mileage = response.xpath('.//*[@class="cg-dealFinder-result-stats"]/p[2]/span/text()').extract()[j]
         		j += 1
