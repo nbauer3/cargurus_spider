@@ -16,13 +16,16 @@ class PostsSpider(scrapy.Spider):
 
 
     # TODO yield data to MySql or .json or .csv file
+    # TODO SOME DATA FOR PRICE IS SWITCHED WITH MILES look at post 1 and 2
 
     # didnt work, can only retrieve page 1 data - updates initial page visit to be page #1
     def parse(self, response):
-    	# TODO PAGE CHANGES WITH THIS SO MAYBE LOOPAND APPEND URL?
-    	#
+    	# for loop with appended url here doesnt work
     	#url = 'https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?sourceContext=carGurusHomePageModel&entitySelectingHelper.selectedEntity=d2207&zip=20164#resultsPage=5' #+ str(i)
     	#yield scrapy.Request(url=url, callback=self.parse)
+
+    	url = response.urljoin('#resultsPage=2')
+    	yield scrapy.Request(url=url, callback=self.parse)
     	self.scrape(response)
 
     	# A @href element that refers to the 'next button'
